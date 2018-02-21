@@ -58,6 +58,9 @@ public class RestRouter {
 
 	private static InjectionProvider injectionProvider;
 
+	private static boolean bodyHandlerRegistered = false;
+	private static boolean cookieHandlerRegistered = false;
+
 	/**
 	 * Searches for annotations to register routes ...
 	 *
@@ -104,9 +107,6 @@ public class RestRouter {
 			}
 
 			Map<RouteDefinition, Method> definitions = AnnotationProcessor.get(api.getClass());
-
-			boolean bodyHandlerRegistered = false;
-			boolean cookieHandlerRegistered = false;
 
 			for (RouteDefinition definition : definitions.keySet()) {
 

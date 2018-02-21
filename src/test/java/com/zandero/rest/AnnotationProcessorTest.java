@@ -2,6 +2,7 @@ package com.zandero.rest;
 
 import com.zandero.rest.data.MediaTypeHelper;
 import com.zandero.rest.data.RouteDefinition;
+import com.zandero.rest.test.ImplementationRest;
 import com.zandero.rest.test.TestRest;
 import io.vertx.core.http.HttpMethod;
 import org.junit.Test;
@@ -50,6 +51,44 @@ public class AnnotationProcessorTest {
 				assertEquals("application/json", MediaTypeHelper.toString(definition.getProduces()[0]));
 
 				assertEquals("jax", method.getName());
+			}
+		}
+	}
+
+	@Test
+	public void getInheritedDefinition() {
+
+		Map<RouteDefinition, Method> definitions = AnnotationProcessor.get(ImplementationRest.class);
+
+		assertEquals(2, definitions.size());
+
+
+		for (RouteDefinition definition : definitions.keySet()) {
+
+			if (definition.getPath().equals("/test/echo")) {
+
+				Method method = definitions.get(definition);
+
+				assertEquals(HttpMethod.GET, definition.getMethod());
+				assertNotNull(definition.getProduces());
+				assertEquals(1, definition.getProduces().length);
+				assertEquals("text/html", MediaTypeHelper.toString(definition.getProduces()[0]));
+				assertEquals("text/html", MediaTypeHelper.toString(definition.getConsumes()[0]));
+
+				assertEquals("echo", method.getName());
+			}
+
+			if (definition.getPath().equals("/test/jax")) {
+
+				Method method = definitions.get(definition);
+
+				assertEquals(HttpMethod.GET, definition.getMethod());
+				assertNotNull(definition.getProduces());
+				assertEquals(1, definition.getProduces().length);
+				assertEquals("application/json", MediaTypeHelper.toString(definition.getProduces()[0]));
+				assertEquals("application/json", MediaTypeHelper.toString(definition.getConsumes()[0]));
+
+				assertEquals("get", method.getName());
 			}
 		}
 	}
